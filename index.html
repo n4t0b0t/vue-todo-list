@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue To-Do List</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>To-Do List with Vue!</h1>
+    <div id="app">
+      <p>{{ message }}</p>
+      <input v-model="message" />
+      <button v-on:click="addItem">Add!</button>
+      <todo-item
+        v-for="item in todoList"
+        v-bind:todo="item"
+        v-bind:key="item.id"
+        v-bind:class="{completed : item.isCompleted}"
+        v-on:toggle="toggleComplete(item)"
+        v-on:remove="removeItem(item)"
+      ></todo-item>
+    </div>
+
+    <script>
+      Vue.component("todo-item", {
+        props: ["todo"],
+        template: `<li>{{todo.text}}<input v-on:click="$emit('toggle')" type='checkbox'><button v-on:click="$emit('remove')">Remove</button></li>`
+      });
+      var app = new Vue({
+        el: "#app",
+        data: {
+          message: "",
+          todoList: [
+            { id: 0, text: "Learn Vue", isCompleted: false },
+            { id: 1, text: "Create something awesome", isCompleted: false },
+            { id: 3, text: "Profit", isCompleted: false }
+          ]
+        },
+        methods: {
+          addItem: function() {
+            this.todoList.push({
+              id: this.todoList.length,
+              text: this.message,
+              isCompleted: false
+            });
+          },
+          removeItem: function(item) {
+            let indexNum = this.todoList.findIndex(el => el.id === item.id);
+            this.todoList.splice(indexNum, 1);
+          },
+          toggleComplete: function(item) {
+            item.isCompleted
+              ? (item.isCompleted = false)
+              : (item.isCompleted = true);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
