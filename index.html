@@ -6,10 +6,9 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>To-Do List with Vue!</h1>
+    <h1>Shopping To-Do List</h1>
     <div id="app">
-      <p>{{ message }}</p>
-      <input v-model="message" />
+      <input v-model="message" v-on:keyup.enter="addItem(); clearMessage()" />
       <button v-on:click="addItem">Add!</button>
       <todo-item
         v-for="item in todoList"
@@ -24,24 +23,43 @@
     <script>
       Vue.component("todo-item", {
         props: ["todo"],
-        template: `<li>{{todo.text}}<input v-on:click="$emit('toggle')" type='checkbox'><button v-on:click="$emit('remove')">Remove</button></li>`
+        template: `<li>{{todo.text}}<input v-on:click="$emit('toggle')" type='checkbox'><button v-on:click="$emit('remove')">Remove</button> Added: {{todo.timeStamp}}</li>`
       });
       var app = new Vue({
         el: "#app",
         data: {
           message: "",
           todoList: [
-            { id: 0, text: "Learn Vue", isCompleted: false },
-            { id: 1, text: "Crush Jesstern", isCompleted: false },
-            { id: 3, text: "Make him weep", isCompleted: false }
+            {
+              id: 0,
+              text: "Toilet paper",
+              isCompleted: false,
+              timeStamp: new Date().toLocaleString()
+            },
+            {
+              id: 1,
+              text: "More tp!",
+              isCompleted: false,
+              timeStamp: new Date().toLocaleString()
+            },
+            {
+              id: 3,
+              text: "10 more avocados",
+              isCompleted: false,
+              timeStamp: new Date().toLocaleString()
+            }
           ]
         },
         methods: {
+          clearMessage: function() {
+            this.message = "";
+          },
           addItem: function() {
             this.todoList.push({
-              id: this.todoList.length,
+              id: this.todoList.length + 1,
               text: this.message,
-              isCompleted: false
+              isCompleted: false,
+              timeStamp: new Date().toLocaleString()
             });
           },
           removeItem: function(item) {
